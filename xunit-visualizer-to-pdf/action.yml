@@ -1,0 +1,13 @@
+# action.yml
+name: 'Generate PDF of JUnit XML'
+description: 'Generate PDF of JUnit XML'
+inputs:
+  junit-xml:
+    description: 'Input file (JUnit XML)'
+    required: true
+    default: 'junit.xml'
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - ${{ inputs.junit-xml }}
