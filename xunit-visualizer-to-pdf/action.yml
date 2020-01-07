@@ -1,4 +1,3 @@
-# action.yml
 name: 'Generate PDF of JUnit XML'
 description: 'Generate PDF of JUnit XML'
 inputs:
