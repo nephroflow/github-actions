@@ -1,0 +1,15 @@
+name: 'Extract version of git ref'
+description: 'Extract version of git ref'
+inputs:
+  git_ref:
+    description: git ref
+    required: true
+    default: ""
+outputs:
+  version:
+    description: the version
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+  - ${{ inputs.git_ref }}
