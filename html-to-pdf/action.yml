@@ -1,0 +1,12 @@
+name: 'Generate PDF of HTML'
+description: 'Generate PDF of HTML'
+inputs:
+  html-file:
+    description: 'Input file (HTML)'
+    required: true
+    default: 'rspec_results.xml'
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - ${{ inputs.html-file }}
