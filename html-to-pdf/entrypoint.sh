@@ -1,3 +1,3 @@
 #!/bin/bash
 
-wkhtmltopdf file:///github/workflow/$1 testrun.pdf
+wkhtmltopdf file:///github/workspace/$1 testrun.pdf
