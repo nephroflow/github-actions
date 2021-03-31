@@ -1,5 +1,5 @@
-name: 'Hello World'
-description: 'Greet someone'
+name: 'Custom docker action'
+description: 'This action combines all the docker logic in one action'
 inputs:
   full-image-name:
     description: 'The hash of the delegation key that will sign the docker image'
@@ -32,7 +32,6 @@ outputs:
 runs:
   using: "composite"
   steps:
-
     - name: Login to ACR
       run: docker login ${{ inputs.docker-registry }} -u ${{ inputs.docker-username }} -p  ${{ inputs.docker-password }}
       shell: bash
