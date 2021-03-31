@@ -28,7 +28,7 @@ inputs:
 outputs:
   digest:
     description: "Digest of docker image that is build"
-    value: ${{ steps.digest.outputs.digest }}
+    value: ${{ steps.push.outputs.digest }}
 runs:
   using: "composite"
   steps:
@@ -40,14 +40,8 @@ runs:
       run: docker build -t ${{ inputs.full-image-name }} .
       shell: bash
 
-    - name: Extract digest
-      id: digest
-      run: |
-        DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' ${{ inputs.full-image-name }} | sed 's/.*@//g')
-        echo "::set-output name=digest:$DIGEST"
-      shell: bash
-
     - name: Sign and push (conditional)
+      id: push
       env:
         DOCKER_CONTENT_TRUST: '1'
         DOCKER_CONTENT_TRUST_REPOSITORY_PASSPHRASE: ${{ inputs.repository-key-passphrase }}
