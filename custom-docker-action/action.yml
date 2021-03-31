@@ -43,7 +43,7 @@ runs:
     - name: Extract digest
       id: digest
       run: |
-        DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' nephroflow.azurecr.io/nipro-slack-bot:v0.1.0 | sed 's/.*@//g')
+        DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' ${{ inputs.full-image-name }} | sed 's/.*@//g')
         echo "::set-output name=digest:$DIGEST"
       shell: bash
 
