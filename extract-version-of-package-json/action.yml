@@ -1,8 +1,0 @@
-name: 'Extract version of package.json'
-description: 'Extract version of package.json'
-outputs:
-  version:
-    description: the version detected in package.json
-runs:
-  using: 'docker'
-  image: 'Dockerfile'
