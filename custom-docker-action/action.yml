@@ -1,0 +1,60 @@
+name: 'Custom docker action'
+description: 'This action combines all the docker logic in one action'
+inputs:
+  full-image-name:
+    description: 'The hash of the delegation key that will sign the docker image'
+    required: true
+  signer-key-hash:
+    description: 'The hash of the delegation key that will sign the docker image'
+    required: true
+  repository-key-passphrase:
+    description: 'The passphrase of the delegation key'
+    required: true
+  repository-key:
+    description: 'The delegation key'
+    required: true
+  docker-registry:
+    description: 'The docker registry'
+    required: true
+  docker-username:
+    description: 'The docker registry'
+    required: true
+  docker-password:
+    description: 'The docker registry'
+    required: true
+  push:
+    description: 'Push the image'
+    required: true
+outputs:
+  digest:
+    description: "Digest of docker image that is build"
+    value: ${{ steps.push.outputs.digest }}
+runs:
+  using: "composite"
+  steps:
+    - name: Login to ACR
+      run: docker login ${{ inputs.docker-registry }} -u ${{ inputs.docker-username }} -p  ${{ inputs.docker-password }}
+      shell: bash
+
+    - name: Build
+      run: docker build -t ${{ inputs.full-image-name }} .
+      shell: bash
+
+    - name: Sign and push (conditional)
+      id: push
+      env:
+        DOCKER_CONTENT_TRUST: '1'
+        DOCKER_CONTENT_TRUST_REPOSITORY_PASSPHRASE: ${{ inputs.repository-key-passphrase }}
+        DOCKER_CONTENT_TRUST_REPOSITORY_KEY: ${{ inputs.repository-key }}
+        SIGNER_KEY_HASH: ${{ inputs.signer-key-hash }}
+        PUSH: ${{ inputs.push }}
+      run: ${{ github.action_path }}/push.sh
+      shell: bash
+
+    - name: Remove image
+      run: docker rmi ${{ inputs.full-image-name }}
+      shell: bash
+
+    - name: Logout to ACR
+      run: docker logout ${{ inputs.docker-registry }}
+      shell: bash
