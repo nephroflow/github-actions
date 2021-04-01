@@ -1,0 +1,32 @@
+name: 'Docker sign action'
+description: 'This action signs a docker image'
+inputs:
+  full-image-name:
+    description: 'The hash of the delegation key that will sign the docker image'
+    required: true
+  signer-key-hash:
+    description: 'The hash of the delegation key that will sign the docker image'
+    required: true
+  repository-key-passphrase:
+    description: 'The passphrase of the delegation key'
+    required: true
+  repository-key:
+    description: 'The delegation key'
+    required: true
+outputs:
+  digest:
+    description: "Digest of docker image that is build"
+    value: ${{ steps.push.outputs.digest }}
+runs:
+  using: "composite"
+  steps:
+    - name: Sign and push
+      id: push
+      env:
+        DOCKER_CONTENT_TRUST: '1'
+        DOCKER_CONTENT_TRUST_REPOSITORY_PASSPHRASE: ${{ inputs.repository-key-passphrase }}
+        DOCKER_CONTENT_TRUST_REPOSITORY_KEY: ${{ inputs.repository-key }}
+        SIGNER_KEY_HASH: ${{ inputs.signer-key-hash }}
+        FULL_IMAGE_NAME: ${{ inputs.full-image-name }}
+      run: ${{ github.action_path }}/push.sh
+      shell: bash
