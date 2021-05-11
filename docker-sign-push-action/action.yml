@@ -2,7 +2,7 @@ name: 'Docker sign action'
 description: 'This action signs a docker image'
 inputs:
   full-image-name:
-    description: 'The hash of the delegation key that will sign the docker image'
+    description: 'The full name of the image to sign'
     required: true
   signer-key-hash:
     description: 'The hash of the delegation key that will sign the docker image'
